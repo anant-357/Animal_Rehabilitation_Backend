@@ -4,6 +4,7 @@
   "description": "Backend For Animal Rehabilitation Website",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/anant-357/Animal_Rehabilitation_Backend/issues"
   },
-  "homepage": "https://github.com/anant-357/Animal_Rehabilitation_Backend#readme"
+  "homepage": "https://github.com/anant-357/Animal_Rehabilitation_Backend#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.0"
+  }
 }
