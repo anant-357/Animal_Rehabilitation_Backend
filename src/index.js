@@ -5,7 +5,7 @@ const userRoute = require("./routes/userRouter");
 const centerRoute = require("./routes/centerRouter");
 const AppError = require("./utils/appError");
 
-//db();
+db();
 
 const app = express();
 

@@ -1,36 +1,36 @@
 const User = require("../../models/user");
 const catchAsync = require("../../utils/catchAsync");
 
-exports.createMerchant = catchAsync(async (req, res, next) => {
-  const { user } = req.body;
-  const data = await Merchant.create({ user });
+exports.createUser = catchAsync(async (req, res, next) => {
+  const user = req.body;
+  const data = await User.create(user);
+  data.save();
   res.status(200).json({
     data,
   });
 });
 
-exports.getMerchants = catchAsync(async (req, res) => {
-  const data = await Merchant.find().populate({
-    path: "user",
-    select: "name email",
-  });
+exports.getUser = catchAsync(async (req, res) => {
+  const data = await User.findOne({ name: req.body });
   res.status(200).json({
     data,
   });
 });
 
-exports.merchantStatus = catchAsync(async (req, res) => {
-  const { status, user } = req.body;
-  const updatedMerchantStatus = await Merchant.findOneAndUpdate(
-    { user: user },
-    { status: status },
-    {
-      new: true,
-    },
-  );
+exports.getAllUsers = catchAsync(async (_req, res) => {
+  const data = await User.findOne();
+  res.status(200).json({
+    data,
+  });
+});
 
+exports.updateUser = catchAsync(async (req, res) => {
+  const user_id = req.body._id;
+  console.log(user_id);
+  const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
+  updatedUser.save();
   res.json({
     message: "updated",
-    data: updatedMerchantStatus,
+    data: updatedUser,
   });
 });
