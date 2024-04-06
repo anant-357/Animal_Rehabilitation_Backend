@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const doctorSchema = new Schema({
-    id: Number, 
     name: String,
     age: Number,
     image: String, 
