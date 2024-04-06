@@ -1,21 +1,22 @@
+const express = require("express");
 const User = require("../../models/user");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const emailVerification = require("../../utils/emailvarification");
-const verificationEmailTemplate = require("../../utils/VerificationEmailTemplate");
+const emailVerification = require("../../utils/mailVerification");
+const verificationEmailTemplate = require("../../utils/mailVerificationTemplate");
+const router = express.Router();
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  const { firstName, lastName, email, telephone, city, password } = req.body;
+  const { name, email, telephone, city, password } = req.body;
 
-  if (!firstName || !lastName) {
-    return res.json({ error: "First Name and Last Name is required" });
+  if (!name) {
+    return res.json({ error: "Name is required" });
   }
   let existingUserCheck = await User.find({ email });
   if (existingUserCheck.length > 0) {
     return res.json({ error: "Email already in use" });
   }
-  let name = firstName + " " + lastName;
   bcrypt.hash(password, 10, async function (err, hash) {
     let user = new User({
       name: name,
@@ -23,16 +24,16 @@ exports.createUser = catchAsync(async (req, res, next) => {
       p_number: telephone,
       city: city,
       password: hash,
+      verified: false,
     });
 
-    user.save();
     let token = jwt.sign({ email }, process.env.JWTSECRET, { expiresIn: "1h" });
     emailVerification(
       user.email,
       "Verification Email",
       verificationEmailTemplate(token),
     );
-
+    user.save();
     res.send(user);
   });
 });
