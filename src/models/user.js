@@ -22,6 +22,7 @@ const userSchema = new Schema({
     required: [true, "User must have a city"],
   },
   verified: Boolean,
+  bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
 });
 
 const User = mongoose.model("User", userSchema);
