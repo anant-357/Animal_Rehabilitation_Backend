@@ -38,6 +38,7 @@ exports.getCentre = catchAsync(async (req, res) => {
 });
 
 exports.getAllCentres = catchAsync(async (_req, res) => {
+  console.log("Getting Centres");
   const data = await Centre.find();
   res.status(200).json({
     data,
