@@ -8,7 +8,8 @@ const verificationEmailTemplate = require("../../utils/mailVerificationTemplate"
 const router = express.Router();
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  const { name, email, telephone, city, password } = req.body;
+  const { name, email, p_number, city, password } = req.body;
+  console.log(req.body);
 
   if (!name) {
     return res.json({ error: "Name is required" });
@@ -21,19 +22,19 @@ exports.createUser = catchAsync(async (req, res, next) => {
     let user = new User({
       name: name,
       email: email,
-      p_number: telephone,
+      p_number: p_number,
       city: city,
       password: hash,
       verified: false,
     });
 
+    user.save();
     let token = jwt.sign({ email }, process.env.JWTSECRET, { expiresIn: "1h" });
     emailVerification(
       user.email,
       "Verification Email",
       verificationEmailTemplate(token),
     );
-    user.save();
     res.send(user);
   });
 });
@@ -41,7 +42,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
 router.post("/emailVerification", async function (req, res) {
   const { authorization } = req.headers;
   const decoded = jwt.verify(authorization, process.env.JWTSECRET);
-  console.log(decoded.email);
   let updateUser = await User.findOneAndUpdate(
     { email: decoded.email },
     { verified: true },
@@ -58,6 +58,28 @@ exports.getUser = catchAsync(async (req, res) => {
   });
 });
 
+exports.authUser = catchAsync(async (req, res) => {
+  const mail = req.body.email;
+  const pass_hash = req.body.password;
+  const user = await User.findOne({ email: mail });
+  if (user) {
+    const match = await bcrypt.compare(pass_hash, user.password);
+    if (match == true) {
+      res.status(200).json({
+        message: "Log in Successful",
+        data: user,
+      });
+    } else {
+      res.status(301).json({
+        message: "Passwords do not match",
+      });
+    }
+  }
+  res.status(300).json({
+    message: "No user assosciated with this email",
+  });
+});
+
 exports.getAllUsers = catchAsync(async (_req, res) => {
   const data = await User.find();
   res.status(200).json({
@@ -67,7 +89,6 @@ exports.getAllUsers = catchAsync(async (_req, res) => {
 
 exports.updateUser = catchAsync(async (req, res) => {
   const user_id = req.body._id;
-  console.log(user_id);
   const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
   updatedUser.save();
   res.json({

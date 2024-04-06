@@ -4,10 +4,17 @@ require("dotenv").config();
 const userRoute = require("./routes/userRouter");
 const centerRoute = require("./routes/centerRouter");
 const AppError = require("./utils/appError");
+const cors = require("cors");
 
 db();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
