@@ -1,13 +1,52 @@
 const User = require("../../models/user");
 const catchAsync = require("../../utils/catchAsync");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const emailVerification = require("../../utils/emailvarification");
+const verificationEmailTemplate = require("../../utils/VerificationEmailTemplate");
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  const user = req.body;
-  const data = await User.create(user);
-  data.save();
-  res.status(200).json({
-    data,
+  const { firstName, lastName, email, telephone, city, password } = req.body;
+
+  if (!firstName || !lastName) {
+    return res.json({ error: "First Name and Last Name is required" });
+  }
+  let existingUserCheck = await User.find({ email });
+  if (existingUserCheck.length > 0) {
+    return res.json({ error: "Email already in use" });
+  }
+  let name = firstName + " " + lastName;
+  bcrypt.hash(password, 10, async function (err, hash) {
+    let user = new User({
+      name: name,
+      email: email,
+      p_number: telephone,
+      city: city,
+      password: hash,
+    });
+
+    user.save();
+    let token = jwt.sign({ email }, process.env.JWTSECRET, { expiresIn: "1h" });
+    emailVerification(
+      user.email,
+      "Verification Email",
+      verificationEmailTemplate(token),
+    );
+
+    res.send(user);
   });
+});
+
+router.post("/emailVerification", async function (req, res) {
+  const { authorization } = req.headers;
+  const decoded = jwt.verify(authorization, process.env.JWTSECRET);
+  console.log(decoded.email);
+  let updateUser = await User.findOneAndUpdate(
+    { email: decoded.email },
+    { verified: true },
+    { new: true },
+  );
+  res.json(updateUser);
 });
 
 exports.getUser = catchAsync(async (req, res) => {
@@ -37,7 +76,7 @@ exports.updateUser = catchAsync(async (req, res) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res) => {
-  const userId = req.body._id; 
+  const userId = req.body._id;
   const deletedUser = await User.findByIdAndDelete({ _id: userId }, req.body);
   if (!deletedUser) {
     return res.status(404).json({
