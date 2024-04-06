@@ -1,0 +1,185 @@
+userData = [
+    {
+        "name": "Anant Sharma",
+        "email": "abcd@gmail.com",
+        "p_number": 1245789632,
+        "password":"abcdSecret",
+        "city": "Guwahati",
+        "bookings": []
+    },
+    {
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "p_number": 9876543210,
+        "password":"johnDoePass",
+        "city": "New York",
+        "bookings": []
+    },
+    {
+        "name": "Emily Smith",
+        "email": "emily.smith@example.com",
+        "p_number": 7418529630,
+        "password":"emilyPass123",
+        "city": "London",
+        "bookings": []
+    },
+    {
+        "name": "Michael Johnson",
+        "email": "michael.johnson@example.com",
+        "p_number": 3692581470,
+        "password":"michaelPass",
+        "city": "Los Angeles",
+        "bookings": []
+    },
+    {
+        "name": "Sophia Brown",
+        "email": "sophia.brown@example.com",
+        "p_number": 8527419630,
+        "password":"sophiaPass",
+        "city": "Paris",
+        "bookings": []
+    },
+    {
+        "name": "Daniel Wilson",
+        "email": "daniel.wilson@example.com",
+        "p_number": 6547893210,
+        "password":"danielPass",
+        "city": "Tokyo",
+        "bookings": []
+    },
+    {
+        "name": "Olivia Miller",
+        "email": "olivia.miller@example.com",
+        "p_number": 1592638470,
+        "password":"oliviaPass",
+        "city": "Sydney",
+        "bookings": []
+    },
+    {
+        "name": "William Taylor",
+        "email": "william.taylor@example.com",
+        "p_number": 7539512468,
+        "password":"williamPass",
+        "city": "Berlin",
+        "bookings": []
+    },
+    {
+        "name": "Emma Clark",
+        "email": "emma.clark@example.com",
+        "p_number": 3692581470,
+        "password":"emmaPass",
+        "city": "Toronto",
+        "bookings": []
+    },
+    {
+        "name": "James Anderson",
+        "email": "james.anderson@example.com",
+        "p_number": 8529631470,
+        "password":"jamesPass",
+        "city": "Madrid",
+        "bookings": []
+    }
+]
+
+centerData =  [
+    {
+        "name": "Animal Day Care",
+        "email": "example@example.com",
+        "p_number": 1478523698,
+        "password": "password$$",
+        "city": "Lucknow",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/animal"
+    },
+    {
+        "name": "Serenity Rehabilitation Center",
+        "email": "serenity@example.com",
+        "p_number": 2589631470,
+        "password": "serenity123",
+        "city": "New York",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/rehabilitation"
+    },
+    {
+        "name": "Tranquility Wellness Center",
+        "email": "tranquility@example.com",
+        "p_number": 3698521470,
+        "password": "tranquilityPass",
+        "city": "Los Angeles",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/wellness"
+    },
+    {
+        "name": "Hope Haven Recovery House",
+        "email": "hopehaven@example.com",
+        "p_number": 1478523690,
+        "password": "hopehavenPass",
+        "city": "Chicago",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/recovery"
+    },
+    {
+        "name": "New Beginnings Rehabilitation",
+        "email": "newbeginnings@example.com",
+        "p_number": 9876543210,
+        "password": "newbeginnings",
+        "city": "London",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/beginnings"
+    },
+    {
+        "name": "Phoenix Recovery Center",
+        "email": "phoenix@example.com",
+        "p_number": 1234567890,
+        "password": "phoenixPass",
+        "city": "Sydney",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/recoverycenter"
+    },
+    {
+        "name": "Harmony Healing House",
+        "email": "harmony@example.com",
+        "p_number": 6543219870,
+        "password": "harmony123",
+        "city": "Toronto",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/healinghouse"
+    },
+    {
+        "name": "Grace Recovery Center",
+        "email": "grace@example.com",
+        "p_number": 9876541230,
+        "password": "gracePass",
+        "city": "Berlin",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/gracerecovery"
+    },
+    {
+        "name": "Renewal Rehabilitation Clinic",
+        "email": "renewal@example.com",
+        "p_number": 3216549870,
+        "password": "renewalPass",
+        "city": "Paris",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/renewalclinic"
+    },
+    {
+        "name": "Oasis Recovery Resort",
+        "email": "oasis@example.com",
+        "p_number": 4567891230,
+        "password": "oasisPass",
+        "city": "Madrid",
+        "bookings": [],
+        "doctors": [],
+        "image": "https://source.unsplash.com/random/recoveryresort"
+    }
+]

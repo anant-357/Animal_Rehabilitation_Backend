@@ -58,6 +58,25 @@ exports.getUser = catchAsync(async (req, res) => {
   });
 });
 
+exports.createUsers = catchAsync(async (req, res) => {
+  const users = req.body;
+  for (let i = 0; i < users.length; i++) {
+    const { name, email, p_number, city, password } = users[i];
+    bcrypt.hash(password, 10, async function (err, hash) {
+      let user = new User({
+        name: name,
+        email: email,
+        p_number: p_number,
+        city: city,
+        password: hash,
+        verified: false,
+      });
+      user.save();
+    });
+  }
+  res.send("Done!");
+});
+
 exports.authUser = catchAsync(async (req, res) => {
   const mail = req.body.email;
   const pass_hash = req.body.password;

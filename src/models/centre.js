@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const centreSchema = new Schema({
   name: String,
   email: String,
-  image:String,
+  image: String,
   p_number: String,
   password: String,
   city: String,
@@ -12,6 +12,6 @@ const centreSchema = new Schema({
   doctors: [{ type: Schema.ObjectId, ref: "Doctor" }],
 });
 
-const centre = mongoose.model("Centre", centreSchema);
+const Centre = mongoose.model("Centre", centreSchema);
 
-module.exports = { centre };
+module.exports = Centre;
