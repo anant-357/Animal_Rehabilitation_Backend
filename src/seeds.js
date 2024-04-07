@@ -340,7 +340,7 @@ console.log(doctorData);
 //Booking data
 const bookingData = [
     {
-        userId: "609c79d16fb5d5e88e94ec63", // Assuming this is a MongoDB ObjectId
+        userId: "609c79d16fb5d5e88e94ec63", 
         centreId: "609c79d16fb5d5e88e94ec70",
         doctorId: "609c79d16fb5d5e88e94ec7a",
         address: "123 Main Street, Anytown, USA",

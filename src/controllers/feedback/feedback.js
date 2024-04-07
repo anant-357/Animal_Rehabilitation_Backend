@@ -10,6 +10,19 @@ exports.createFeedback = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createFeedbacks = catchAsync(async (req, res) => {
+    const feedbacks = req.body;
+    for (let i = 0; i < feedbacks.length; i++) {
+        const feedback = feedbacks[i];
+        let feedback_new = new Feedback({
+            report:feedback.report,
+            info:feedback.info
+        });
+        feedback_new.save();
+    }
+    res.send("Done!");
+});
+
 exports.getFeedback = catchAsync(async (req, res) => {
   const centre_id = req.body._id;
   const data = await Feedback.find({_id: centre_id });

@@ -8,9 +8,9 @@ const bookingSchema = new Schema({
 
   address: String, //of the user
   pickTime: String,
-  details: String, //nany medical details related to the pet
+  details: String, //any medical details related to the pet
 });
 
-const booking = mongoose.model("Booking", bookingSchema);
+const Record = mongoose.model("Booking", bookingSchema);
 
-module.exports = { book };
+module.exports = Record;

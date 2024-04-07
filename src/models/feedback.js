@@ -7,6 +7,6 @@ const feedbackSchema = new Schema({
   info:String,
 });
 
-const feedback = mongoose.model("Feedback", feedbackSchema);
+const Feedback = mongoose.model("Feedback", feedbackSchema);
 
-module.exports = { feedback };
+module.exports = Feedback ;

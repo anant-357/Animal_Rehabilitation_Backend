@@ -10,6 +10,20 @@ exports.createRecord = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createRecords = catchAsync(async (req, res) => {
+    const records = req.body;
+    for (let i = 0; i < records.length; i++) {
+      const record = records[i];
+      let record_new = new Record({
+        address:record.address,
+        pickTime:record.pickTime,
+        details:record.details,
+      });
+      record_new.save();
+    }
+    res.send("Done!");
+  });
+
 exports.getRecord = catchAsync(async (req, res) => {
   const record_id = req.body._id;
   const data = await Record.findOne({ _id: record_id }, req.body);

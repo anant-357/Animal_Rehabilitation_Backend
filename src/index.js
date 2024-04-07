@@ -4,6 +4,8 @@ require("dotenv").config();
 const userRoute = require("./routes/userRouter");
 const centerRoute = require("./routes/centerRouter");
 const doctorRoute = require("./routes/doctorRouter");
+const feedbackRoute = require("./routes/feedbackRouter");
+const recordsRoute = require("./routes/recordsRouter");
 const AppError = require("./utils/appError");
 const cors = require("cors");
 
@@ -30,6 +32,8 @@ app.get("/", (_req, res) => {
 app.use("/api/user/", userRoute);
 app.use("/api/center/", centerRoute);
 app.use("/api/doctor/", doctorRoute);
+app.use("/api/feedback/", feedbackRoute);
+app.use("/api/records/", recordsRoute);
 
 app.all("*", (_req, _res, next) => {
   next(new AppError("Cannot find on this server", 404));
