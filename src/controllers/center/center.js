@@ -23,6 +23,7 @@ exports.createCentres = catchAsync(async (req, res) => {
         email: centre.email,
         p_number: centre.p_number,
         city: centre.city,
+        description:centre.description,
         bookings: [],
         feedback: [],
         doctors: [],
