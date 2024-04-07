@@ -79,10 +79,10 @@ exports.createUsers = catchAsync(async (req, res) => {
 
 exports.authUser = catchAsync(async (req, res) => {
   const mail = req.body.email;
-  const pass_hash = req.body.password;
+  const pass = req.body.password;
   const user = await User.findOne({ email: mail });
   if (user) {
-    const match = await bcrypt.compare(pass_hash, user.password);
+    const match = await bcrypt.compare(pass, user.password);
     if (match == true) {
       res.status(200).json({
         message: "Log in Successful",

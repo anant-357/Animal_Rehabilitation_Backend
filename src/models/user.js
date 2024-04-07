@@ -23,6 +23,7 @@ const userSchema = new Schema({
   },
   verified: Boolean,
   bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
+  complaints: [{ type: Schema.ObjectId, ref: "Feedback" }],
 });
 
 const User = mongoose.model("User", userSchema);

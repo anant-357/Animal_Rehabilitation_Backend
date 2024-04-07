@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const feedbackSchema = new Schema({
-  victim: Schema.Types.ObjectId,
+  accused: { type: Schema.Types.ObjectId, ref: "Centre" },
+  source: { type: Schema.Types.ObjectId, ref: "User" },
   report: Boolean,
-  info:String,
+  info: String,
 });
 
 const feedback = mongoose.model("Feedback", feedbackSchema);
