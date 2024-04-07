@@ -1,4 +1,5 @@
 const Centre = require("../../models/centre");
+const User = require("../../models/user");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
 
@@ -99,9 +100,16 @@ exports.deleteCentre = catchAsync(async (req, res) => {
 });
 
 exports.feedbackOfCentre = catchAsync(async (req, res) => {
-  const centreId = req.body._id;
-  const centre = Centre.findOne({ _id: centreId });
+  const centreId = req.params.centreId;
+  const centre = await Centre.findOne({ _id: centreId });
+  console.log(centre);
+  const feedback = [];
+  for(let i = 0 ; i < centre.feedback.length; i++){
+    const user = await User.findOne({_id: centre.feedback[i].source}).name;
+    feedback[i] = {...centre.feedback[i], user};
+  }
+  console.log(feedback);
   return res.status(200).json({
-    data: centre.feedback,
+    data: feedback,
   });
 });
