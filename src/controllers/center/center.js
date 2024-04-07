@@ -29,6 +29,28 @@ exports.createCentres = catchAsync(async (req, res) => {
   res.send("Done!");
 });
 
+exports.authCentre = catchAsync(async (req, res) => {
+  const mail = req.body.email;
+  const pass_hash = req.body.password;
+  const user = await Centre.findOne({ email: mail });
+  if (user) {
+    const match = bcrypt.compare(pass_hash, user.password);
+    if (match == true) {
+      res.status(200).json({
+        message: "Log in Successful",
+        data: user,
+      });
+    } else {
+      res.status(301).json({
+        message: "Passwords do not match",
+      });
+    }
+  }
+  res.status(300).json({
+    message: "No centre assosciated with this email",
+  });
+});
+
 exports.getCentre = catchAsync(async (req, res) => {
   const centre_id = req.body._id;
   const data = await Centre.findOne({ _id: centre_id }, req.body);
@@ -73,5 +95,13 @@ exports.deleteCentre = catchAsync(async (req, res) => {
   res.json({
     message: "Centre deleted successfully",
     data: deletedCentre,
+  });
+});
+
+exports.feedbackOfCentre = catchAsync(async (req, res) => {
+  const centreId = req.body._id;
+  const centre = Centre.findOne({ _id: centreId });
+  return res.status(200).json({
+    data: centre.feedback,
   });
 });

@@ -10,6 +10,7 @@ const centreSchema = new Schema({
   city: String,
   bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
   doctors: [{ type: Schema.ObjectId, ref: "Doctor" }],
+  feedback: [{ type: Schema.ObjectId, ref: "Feedback" }],
 });
 
 const Centre = mongoose.model("Centre", centreSchema);
