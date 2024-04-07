@@ -23,6 +23,7 @@ exports.createCentres = catchAsync(async (req, res) => {
         email: centre.email,
         p_number: centre.p_number,
         city: centre.city,
+        image: centre.image,
         bookings: [],
         feedback: [],
         doctors: [],
@@ -34,24 +35,36 @@ exports.createCentres = catchAsync(async (req, res) => {
   res.send("Done!");
 });
 
+exports.getCities = catchAsync(async (_req, res) => {
+  const cities = new Set();
+  const centres = await Centre.find();
+  for (let i = 0; i < centres.length; i++) {
+    cities.add(centres[i].city);
+    console.log(centres[i].city);
+  }
+  return res.status(200).json({
+    data: [...cities],
+  });
+});
+
 exports.authCentre = catchAsync(async (req, res) => {
   const mail = req.body.email;
   const pass_hash = req.body.password;
   const user = await Centre.findOne({ email: mail });
   if (user) {
-    const match = bcrypt.compare(pass_hash, user.password);
+    const match = await bcrypt.compare(pass_hash, user.password);
     if (match == true) {
-      res.status(200).json({
+      return res.status(200).json({
         message: "Log in Successful",
         data: user,
       });
     } else {
-      res.status(301).json({
+      return res.status(301).json({
         message: "Passwords do not match",
       });
     }
   }
-  res.status(300).json({
+  return res.status(300).json({
     message: "No centre assosciated with this email",
   });
 });
@@ -106,13 +119,15 @@ exports.deleteCentre = catchAsync(async (req, res) => {
 exports.feedbackOfCentre = catchAsync(async (req, res) => {
   const centreId = req.params.centreId;
   const centre = await Centre.findOne({ _id: centreId });
-  // console.log(centre);
+  //console.log(centre);
   const feedback_arr = [];
-  for(let i = 0 ; i < centre.feedback.length; i++){
-    const {info, report, accused, source} = await Feedback.findOne({_id: centre.feedback[i] })
-    const {name} = await User.findOne({_id: source });
+  for (let i = 0; i < centre.feedback.length; i++) {
+    const { info, report, accused, source } = await Feedback.findOne({
+      _id: centre.feedback[i],
+    });
+    const { name } = await User.findOne({ _id: source });
     console.log(name);
-    feedback_arr.push({info, report, accused, source, name});
+    feedback_arr.push({ info, report, accused, source, name });
     // console.log(feedback[i]);
   }
   //console.log(feedback);
@@ -127,7 +142,8 @@ exports.deleteAllCentres = catchAsync(async (_req, res) => {
 
   // Respond with success message
   res.status(200).json({
-    status: 'success',
-    message: 'All feedbacks have been successfully deleted.',
+    status: "success",
+    message: "All feedbacks have been successfully deleted.",
   });
 });
+
