@@ -10,6 +10,23 @@ exports.createDoctor = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createDoctors = catchAsync(async (req, res) => {
+    const doctors = req.body;
+    for (let i = 0; i < doctors.length; i++) {
+      const doctor = doctors[i];
+      let doctor_new = new Doctor({
+        name: doctor.name,
+        age:doctor.age,
+        email: doctor.email,
+        qualification:doctor.qualification,
+        image:doctor.image,
+      });
+      doctor_new.save();
+    }
+    res.send("Done!");
+  });
+
+
 exports.getDoctor = catchAsync(async (req, res) => {
   const doctor_id = req.body._id;
   const data = await Doctor.findOne({ _id: doctor_id }, req.body);

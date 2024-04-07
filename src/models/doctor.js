@@ -10,6 +10,6 @@ const doctorSchema = new Schema({
   bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
 });
 
-const doctor = mongoose.model("Doctor", doctorSchema);
+const Doctor = mongoose.model("Doctor", doctorSchema);
 
-module.exports = { doctor };
+module.exports = Doctor;

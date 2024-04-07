@@ -183,3 +183,86 @@ centerData =  [
         "image": "https://source.unsplash.com/random/recoveryresort"
     }
 ]
+
+const doctorData = [
+    {
+        "name": "Dr. John Smith",
+        "age": 40,
+        "image": "https://source.unsplash.com/random/1",
+        "email": "john.smith@example.com",
+        "qualification": "MD, Psychiatry",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Emily Johnson",
+        "age": 35,
+        "image": "https://source.unsplash.com/random/2",
+        "email": "emily.johnson@example.com",
+        "qualification": "PhD, Clinical Psychology",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Michael Williams",
+        "age": 45,
+        "image": "https://source.unsplash.com/random/3",
+        "email": "michael.williams@example.com",
+        "qualification": "MD, Addiction Medicine",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Sophia Brown",
+        "age": 38,
+        "image": "https://source.unsplash.com/random/4",
+        "email": "sophia.brown@example.com",
+        "qualification": "MD, Behavioral Health",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Daniel Davis",
+        "age": 42,
+        "image": "https://source.unsplash.com/random/5",
+        "email": "daniel.davis@example.com",
+        "qualification": "MD, Psychiatry",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Olivia Miller",
+        "age": 37,
+        "image": "https://source.unsplash.com/random/6",
+        "email": "olivia.miller@example.com",
+        "qualification": "MD, Addiction Psychiatry",
+        "bookings": []
+    },
+    {
+        "name": "Dr. William Taylor",
+        "age": 41,
+        "image": "https://source.unsplash.com/random/7",
+        "email": "william.taylor@example.com",
+        "qualification": "PhD, Clinical Psychology",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Emma Clark",
+        "age": 36,
+        "image": "https://source.unsplash.com/random/8",
+        "email": "emma.clark@example.com",
+        "qualification": "MD, Behavioral Medicine",
+        "bookings": []
+    },
+    {
+        "name": "Dr. James Anderson",
+        "age": 39,
+        "image": "https://source.unsplash.com/random/9",
+        "email": "james.anderson@example.com",
+        "qualification": "MD, Addiction Psychiatry",
+        "bookings": []
+    },
+    {
+        "name": "Dr. Sarah Moore",
+        "age": 43,
+        "image": "https://source.unsplash.com/random/10",
+        "email": "sarah.moore@example.com",
+        "qualification": "MD, Clinical Psychiatry",
+        "bookings": []
+    }
+];
