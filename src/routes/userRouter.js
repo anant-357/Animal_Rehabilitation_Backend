@@ -8,6 +8,7 @@ const {
   authUser,
   createUsers,
   createBooking,
+  deleteAllUsers,
 } = require("../controllers/user/user");
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.route("/delete").delete(deleteUser);
 router.route("/auth").post(authUser);
 router.route("/createMany").post(createUsers);
 router.route("/createBooking").post(createBooking);
+router.route("/deleteAll").delete(deleteAllUsers);
 
 module.exports = router;
