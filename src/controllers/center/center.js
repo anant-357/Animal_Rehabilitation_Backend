@@ -24,6 +24,7 @@ exports.createCentres = catchAsync(async (req, res) => {
         p_number: centre.p_number,
         city: centre.city,
         image: centre.image,
+        description: centre.description,
         bookings: [],
         feedback: [],
         doctors: [],
@@ -146,4 +147,3 @@ exports.deleteAllCentres = catchAsync(async (_req, res) => {
     message: "All feedbacks have been successfully deleted.",
   });
 });
-

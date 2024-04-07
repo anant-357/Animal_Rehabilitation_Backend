@@ -8,6 +8,7 @@ const centreSchema = new Schema({
   p_number: String,
   password: String,
   city: String,
+  description:String,
   bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
   doctors: [{ type: Schema.ObjectId, ref: "Doctor" }],
   feedback: [{ type: Schema.ObjectId, ref: "Feedback" }],
