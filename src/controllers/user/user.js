@@ -28,6 +28,8 @@ exports.createUser = catchAsync(async (req, res, next) => {
       p_number: p_number,
       city: city,
       password: hash,
+      bookings: [],
+      complaints: [],
       verified: false,
     });
 
@@ -185,4 +187,16 @@ exports.createBooking = catchAsync(async (req, res) => {
       data: booking,
     });
   }
+});
+
+
+exports.deleteAllUsers = catchAsync(async (_req, res) => {
+  // Delete all feedbacks
+  await User.deleteMany({});
+
+  // Respond with success message
+  res.status(200).json({
+    status: 'success',
+    message: 'All feedbacks have been successfully deleted.',
+  });
 });

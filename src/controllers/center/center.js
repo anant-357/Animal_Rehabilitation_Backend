@@ -1,4 +1,5 @@
 const Centre = require("../../models/centre");
+const Feedback = require("../../models/feedback");
 const User = require("../../models/user");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
@@ -22,6 +23,9 @@ exports.createCentres = catchAsync(async (req, res) => {
         email: centre.email,
         p_number: centre.p_number,
         city: centre.city,
+        bookings: [],
+        feedback: [],
+        doctors: [],
         password: hash,
       });
       centre_new.save();
@@ -102,14 +106,28 @@ exports.deleteCentre = catchAsync(async (req, res) => {
 exports.feedbackOfCentre = catchAsync(async (req, res) => {
   const centreId = req.params.centreId;
   const centre = await Centre.findOne({ _id: centreId });
-  console.log(centre);
-  const feedback = [];
+  // console.log(centre);
+  const feedback_arr = [];
   for(let i = 0 ; i < centre.feedback.length; i++){
-    const user = await User.findOne({_id: centre.feedback[i].source}).name;
-    feedback[i] = {...centre.feedback[i], user};
+    const {info, report, accused, source} = await Feedback.findOne({_id: centre.feedback[i] })
+    const {name} = await User.findOne({_id: source });
+    console.log(name);
+    feedback_arr.push({info, report, accused, source, name});
+    // console.log(feedback[i]);
   }
-  console.log(feedback);
+  //console.log(feedback);
   return res.status(200).json({
-    data: feedback,
+    data: feedback_arr,
+  });
+});
+
+exports.deleteAllCentres = catchAsync(async (_req, res) => {
+  // Delete all feedbacks
+  await Centre.deleteMany({});
+
+  // Respond with success message
+  res.status(200).json({
+    status: 'success',
+    message: 'All feedbacks have been successfully deleted.',
   });
 });
