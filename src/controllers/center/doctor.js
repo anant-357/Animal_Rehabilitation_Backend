@@ -1,4 +1,5 @@
 const Doctor = require("../../models/doctor");
+const Centre = require("../../models/centre");
 const catchAsync = require("../../utils/catchAsync");
 
 exports.createDoctor = catchAsync(async (req, res, next) => {
@@ -20,8 +21,16 @@ exports.createDoctors = catchAsync(async (req, res) => {
         email: doctor.email,
         qualification:doctor.qualification,
         image:doctor.image,
+        centers:doctor.centers,
       });
       doctor_new.save();
+      const center = await Centre.findOne({_id: doctor.centers});
+      if(center) {
+        //console.log(accused);
+
+        center.doctors.push(doctor_new._id);
+        center.save();
+      }
     }
     res.send("Done!");
   });
