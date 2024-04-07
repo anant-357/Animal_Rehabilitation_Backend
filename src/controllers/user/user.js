@@ -122,6 +122,32 @@ exports.updateUser = catchAsync(async (req, res) => {
 exports.deleteUser = catchAsync(async (req, res) => {
   const userId = req.body._id;
   const deletedUser = await User.findByIdAndDelete({ _id: userId }, req.body);
+  for (let i = 0; i < deletedUser.bookings.length; i++) {
+    const bookingId = deletedUser.bookings[i];
+
+    const booking = await Booking.findOne({ _id: bookingId });
+    if (!booking) {
+      continue;
+    }
+
+    const { centreId, doctorId } = booking;
+
+    const centre = await Centre.findOne({ _id: centreId });
+    if (centre) {
+      centre.bookings = centre.bookings.filter(
+        (bId) => bId.toString() !== bookingId.toString(),
+      );
+      await centre.save();
+    }
+
+    const doctor = await Doctor.findOne({ _id: doctorId });
+    if (doctor) {
+      doctor.bookings = doctor.bookings.filter(
+        (bId) => bId.toString() !== bookingId.toString(),
+      );
+      await doctor.save();
+    }
+  }
   if (!deletedUser) {
     return res.status(404).json({
       message: "User not found",
