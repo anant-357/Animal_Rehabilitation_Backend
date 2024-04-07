@@ -1,5 +1,8 @@
 const express = require("express");
 const User = require("../../models/user");
+const Centre = require("../../models/centre");
+const Doctor = require("../../models/doctor");
+const Booking = require("../../models/bookingRecord");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -124,8 +127,36 @@ exports.deleteUser = catchAsync(async (req, res) => {
       message: "User not found",
     });
   }
-  res.json({
+  return res.json({
     message: "User deleted successfully",
     data: deletedUser,
   });
+});
+
+exports.createBooking = catchAsync(async (req, res) => {
+  const { userId, centreId, doctorId, address, pickTime, details } = req.body;
+  const user = await User.findOne({ _id: userId });
+  const centre = await Centre.findOne({ _id: centreId });
+  const doctor = await Doctor.findOne({ _id: doctorId });
+  if (user && centre && doctor) {
+    const booking = new Booking({
+      userId,
+      centreId,
+      doctorId,
+      address,
+      pickTime,
+      details,
+    });
+    booking.save();
+    user.bookings.push(booking._id);
+    user.save();
+    centre.bookings.push(booking._id);
+    centre.save();
+    doctor.bookings.push(booking._id);
+    doctor.save();
+    return res.status(200).json({
+      message: "Booking Succesful",
+      data: booking,
+    });
+  }
 });

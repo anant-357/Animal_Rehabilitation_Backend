@@ -7,6 +7,7 @@ const {
   deleteUser,
   authUser,
   createUsers,
+  createBooking,
 } = require("../controllers/user/user");
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.route("/update").patch(updateUser);
 router.route("/delete").delete(deleteUser);
 router.route("/auth").post(authUser);
 router.route("/createMany").post(createUsers);
+router.route("/createBooking").post(createBooking);
 
 module.exports = router;
