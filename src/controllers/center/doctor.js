@@ -110,7 +110,7 @@ exports.updateCentre = catchAsync(async (req, res) => {
 });
 
 exports.deleteDoctor = catchAsync(async (req, res) => {
-    const doctorId = req.body._id; 
+    const doctorId = req.params.doctorId; 
     const deletedDoctor = await Doctor.findByIdAndDelete({ _id: doctorId }, req.body);
     if (!deletedDoctor) {
         return res.status(404).json({
