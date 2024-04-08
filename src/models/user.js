@@ -21,7 +21,6 @@ const userSchema = new Schema({
     type: String,
     required: [true, "User must have a city"],
   },
-  verified: Boolean,
   bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
   complaints: [{ type: Schema.ObjectId, ref: "Feedback" }],
 });
