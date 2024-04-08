@@ -5,7 +5,6 @@ const centreSchema = new Schema({
   name: String,
   email: String,
   image: String,
-  price: Number,
   p_number: String,
   price: String,
   password: String,
