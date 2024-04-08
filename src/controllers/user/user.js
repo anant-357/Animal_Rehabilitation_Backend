@@ -111,15 +111,54 @@ exports.getAllUsers = catchAsync(async (_req, res) => {
   });
 });
 
+// exports.updateUser = catchAsync(async (req, res) => {
+//   const user_id = req.body._id;
+//   const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
+//   updatedUser.save();
+//   res.json({
+//     message: "updated",
+//     data: updatedUser,
+//   });
+// });
+
 exports.updateUser = catchAsync(async (req, res) => {
-  const user_id = req.body._id;
-  const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
-  updatedUser.save();
-  res.json({
-    message: "updated",
-    data: updatedUser,
-  });
+  const user_id = req.params.userId;
+  const updatedFields = req.body;
+  const data1 = await User.findOne({ _id: user_id }, req.body);
+  if (updatedFields.password!=data1.password) {
+    bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
+      if (err) {
+        // Handle error
+        return res.status(500).json({ error: "Error hashing password" });
+      }
+
+      updatedFields.password = hash; 
+
+      const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.json({
+        message: "User updated",
+        data: updatedUser,
+      });
+    });
+  } else {
+    const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      message: "User updated",
+      data: updatedUser,
+    });
+  }
 });
+
 
 exports.deleteUser = catchAsync(async (req, res) => {
   const userId = req.body._id;

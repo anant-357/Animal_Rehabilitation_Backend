@@ -77,10 +77,12 @@ exports.authCentre = catchAsync(async (req, res) => {
 });
 
 exports.getCentre = catchAsync(async (req, res) => {
-  const centre_id = req.body._id;
-  const data = await Centre.findOne({ _id: centre_id }, req.body);
-  res.status(200).json({
-    data,
+  const centre_id = req.params.centreId;
+  //console.log(centre_id)
+  const data1 = await Centre.findOne({ _id: centre_id }, req.body);
+  //console.log(data1);
+  return res.status(200).json({
+    data:data1,
   });
 });
 
@@ -92,19 +94,65 @@ exports.getAllCentres = catchAsync(async (_req, res) => {
   });
 });
 
+// exports.updateCentre = catchAsync(async (req, res) => {
+//   const centre_id = req.params.centreId;
+//   console.log(req.body);
+//   //console.log(centre_id);
+//   const updatedCentre = await Centre.findOneAndReplace(
+//     { _id: centre_id },
+//     req.body,
+//   );
+//   updatedCentre.save();
+//   res.json({
+//     message: "updated",
+//     data: updatedCentre,
+//   });
+// });
+
 exports.updateCentre = catchAsync(async (req, res) => {
-  const centre_id = req.body._id;
-  console.log(centre_id);
-  const updatedCentre = await Centre.findOneAndReplace(
-    { _id: centre_id },
-    req.body,
-  );
-  updatedCentre.save();
-  res.json({
-    message: "updated",
-    data: updatedCentre,
-  });
+  const centre_id = req.params.centreId;
+  const updatedFields = req.body;
+  const data1 = await Centre.findOne({ _id: centre_id }, req.body);
+  if (updatedFields.password!=data1.password) {
+    bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
+      if (err) {
+        // Handle error
+        return res.status(500).json({ error: "Error hashing password" });
+      }
+
+      updatedFields.password = hash; 
+
+      const updatedCentre = await Centre.findOneAndReplace(
+          { _id: centre_id },
+          req.body,
+      );
+
+      if (!updatedCentre) {
+        return res.status(404).json({ error: "Centre not found" });
+      }
+
+      res.json({
+        message: "Centre updated",
+        data: updatedCentre,
+      });
+    });
+  } else {
+    const updatedCentre = await Centre.findOneAndReplace(
+      { _id: centre_id },
+      req.body,
+    );
+
+    if (!updatedCentre) {
+      return res.status(404).json({ error: "Centre not found" });
+    }
+
+    res.json({
+      message: "Centre updated",
+      data: updatedCentre,
+    });
+  }
 });
+
 
 exports.deleteCentre = catchAsync(async (req, res) => {
   const centreId = req.body._id;
