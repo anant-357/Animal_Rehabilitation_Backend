@@ -103,17 +103,20 @@ exports.updateUser = catchAsync(async (req, res) => {
   const updatedFields = req.body;
   console.log(updatedFields);
   const data1 = await User.findOne({ _id: user_id }, req.body);
-  console.log(data1)
-  if (updatedFields.password!=data1.password) {
+  console.log(data1);
+  if (updatedFields.password != data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {
         // Handle error
         return res.status(500).json({ error: "Error hashing password" });
       }
 
-      updatedFields.password = hash; 
+      updatedFields.password = hash;
 
-      const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
+      const updatedUser = await User.findOneAndReplace(
+        { _id: user_id },
+        req.body,
+      );
 
       if (!updatedUser) {
         return res.status(404).json({ error: "User not found" });
@@ -125,7 +128,10 @@ exports.updateUser = catchAsync(async (req, res) => {
       });
     });
   } else {
-    const updatedUser = await User.findOneAndReplace({ _id: user_id }, req.body);
+    const updatedUser = await User.findOneAndReplace(
+      { _id: user_id },
+      req.body,
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -137,7 +143,6 @@ exports.updateUser = catchAsync(async (req, res) => {
     });
   }
 });
-
 
 exports.deleteUser = catchAsync(async (req, res) => {
   const userId = req.body._id;
@@ -199,8 +204,6 @@ exports.createBooking = catchAsync(async (req, res) => {
     user.save();
     centre.bookings.push(booking._id);
     centre.save();
-    // doctor.bookings.push(booking._id);
-    // doctor.save();
     return res.status(200).json({
       message: "Booking Succesful",
       data: booking,
@@ -246,4 +249,3 @@ exports.recordsOfUser = catchAsync(async (req, res) => {
     data: records_arr,
   });
 });
-

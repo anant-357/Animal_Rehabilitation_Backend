@@ -12,30 +12,27 @@ exports.createDoctor = catchAsync(async (req, res, next) => {
 });
 
 exports.createDoctors = catchAsync(async (req, res) => {
-    const centre_id=req.params.centreId;
-    const doctors = req.body;
-    for (let i = 0; i < doctors.length; i++) {
-      const doctor = doctors[i];
-      let doctor_new = new Doctor({
-        name: doctor.name,
-        age:doctor.age,
-        email: doctor.email,
-        qualification:doctor.qualification,
-        image:doctor.image,
-        centers:centre_id,
-      });
-      doctor_new.save();
-      const center = await Centre.findOne({_id: centre_id});
-      if(center) {
-        //console.log(accused);
-
-        center.doctors.push(doctor_new._id);
-        center.save();
-      }
+  const centre_id = req.params.centreId;
+  const doctors = req.body;
+  for (let i = 0; i < doctors.length; i++) {
+    const doctor = doctors[i];
+    let doctor_new = new Doctor({
+      name: doctor.name,
+      age: doctor.age,
+      email: doctor.email,
+      qualification: doctor.qualification,
+      image: doctor.image,
+      centers: centre_id,
+    });
+    doctor_new.save();
+    const center = await Centre.findOne({ _id: centre_id });
+    if (center) {
+      center.doctors.push(doctor_new._id);
+      center.save();
     }
-    res.send("Done!");
-  });
-
+  }
+  res.send("Done!");
+});
 
 exports.getDoctor = catchAsync(async (req, res) => {
   const doctor_id = req.body._id;
@@ -55,7 +52,10 @@ exports.getAllDoctors = catchAsync(async (_req, res) => {
 exports.updateDoctor = catchAsync(async (req, res) => {
   const doctor_id = req.params.doctorId;
   console.log(doctor_id);
-  const updatedDoctor = await Doctor.findOneAndReplace({ _id: doctor_id }, req.body);
+  const updatedDoctor = await Doctor.findOneAndReplace(
+    { _id: doctor_id },
+    req.body,
+  );
   updatedDoctor.save();
   res.json({
     message: "updated",
@@ -67,19 +67,19 @@ exports.updateCentre = catchAsync(async (req, res) => {
   const centre_id = req.params.centreId;
   const updatedFields = req.body;
   const data1 = await Centre.findOne({ _id: centre_id }, req.body);
-  if (updatedFields.password!=data1.password) {
+  if (updatedFields.password != data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {
         // Handle error
         return res.status(500).json({ error: "Error hashing password" });
       }
 
-      updatedFields.password = hash; 
+      updatedFields.password = hash;
 
       const updatedCentre = await Centre.findOneAndUpdate(
         { _id: centre_id },
         updatedFields,
-        { new: true } 
+        { new: true },
       );
 
       if (!updatedCentre) {
@@ -95,7 +95,7 @@ exports.updateCentre = catchAsync(async (req, res) => {
     const updatedCentre = await Centre.findOneAndUpdate(
       { _id: centre_id },
       updatedFields,
-      { new: true } 
+      { new: true },
     );
 
     if (!updatedCentre) {
@@ -113,13 +113,11 @@ exports.deleteDoctor = catchAsync(async (req, res) => {
   const doctorId = req.params.doctorId; 
   const deletedDoctor = await Doctor.findById(doctorId);
   if (!deletedDoctor) {
-      return res.status(404).json({
-          message: "Doctor not found",
-      });
+    return res.status(404).json({
+      message: "Doctor not found",
+    });
   }
   for (const centerId of deletedDoctor.centers) {
-    console.log("here00");
-    console.log(centerId)
       const center = await Centre.findById(centerId);      
       if (center) {
           center.doctors = center.doctors.filter(doc => doc._id.toString() !== doctorId);
@@ -128,8 +126,7 @@ exports.deleteDoctor = catchAsync(async (req, res) => {
   }
   await Doctor.findByIdAndDelete(doctorId);
   res.json({
-      message: "Doctor deleted successfully",
-      data: deletedDoctor,
+    message: "Doctor deleted successfully",
+    data: deletedDoctor,
   });
 });
-  

@@ -29,7 +29,7 @@ exports.createCentres = catchAsync(async (req, res) => {
         name: centre.name,
         email: centre.email,
         p_number: centre.p_number,
-        price:centre.price,
+        price: centre.price,
         city: centre.city,
         image: centre.image,
         description: centre.description,
@@ -83,7 +83,7 @@ exports.getCentre = catchAsync(async (req, res) => {
   const data1 = await Centre.findOne({ _id: centre_id }, req.body);
   //console.log(data1);
   return res.status(200).json({
-    data:data1,
+    data: data1,
   });
 });
 
@@ -114,19 +114,19 @@ exports.updateCentre = catchAsync(async (req, res) => {
   const centre_id = req.params.centreId;
   const updatedFields = req.body;
   const data1 = await Centre.findOne({ _id: centre_id }, req.body);
-  console.log(data1)
-  if (updatedFields.password!=data1.password) {
+  console.log(data1);
+  if (updatedFields.password != data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {
         // Handle error
         return res.status(500).json({ error: "Error hashing password" });
       }
 
-      updatedFields.password = hash; 
+      updatedFields.password = hash;
 
       const updatedCentre = await Centre.findOneAndReplace(
-          { _id: centre_id },
-          req.body,
+        { _id: centre_id },
+        req.body,
       );
 
       if (!updatedCentre) {
@@ -154,7 +154,6 @@ exports.updateCentre = catchAsync(async (req, res) => {
     });
   }
 });
-
 
 exports.deleteCentre = catchAsync(async (req, res) => {
   const centreId = req.body._id;
@@ -198,7 +197,7 @@ exports.doctorsOfCentre = catchAsync(async (req, res) => {
   } else {
     const centre = await Centre.findOne({ _id: centreId });
     for (let i = 0; i < centre.doctors.length; i++) {
-      const { name, age, email, qualification, image, bookings, centers } =
+      const { _id, name, age, email, qualification, image, bookings, centers } =
         await Doctor.findOne({ _id: centre.doctors[i] });
       doctors_arr.push({
         _id: centre.doctors[i],
