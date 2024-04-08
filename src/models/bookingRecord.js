@@ -9,6 +9,7 @@ const bookingSchema = new Schema({
   address: String, //of the user
   pickTime: String,
   details: String, //any medical details related to the pet
+  status: String,
 });
 
 const Record = mongoose.model("Booking", bookingSchema);

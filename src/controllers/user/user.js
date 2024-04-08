@@ -89,17 +89,17 @@ exports.authUser = catchAsync(async (req, res) => {
   if (user) {
     const match = await bcrypt.compare(pass, user.password);
     if (match == true) {
-      res.status(200).json({
+      return res.status(200).json({
         message: "Log in Successful",
         data: user,
       });
     } else {
-      res.status(301).json({
+      return res.status(301).json({
         message: "Passwords do not match",
       });
     }
   }
-  res.status(300).json({
+  return res.status(300).json({
     message: "No user assosciated with this email",
   });
 });
@@ -166,7 +166,7 @@ exports.createBooking = catchAsync(async (req, res) => {
   const user = await User.findOne({ _id: userId });
   const centre = await Centre.findOne({ _id: centreId });
   const doctor = await Doctor.findOne({ _id: doctorId });
-  if (user && centre && doctor) {
+  if (user && centre) {
     const booking = new Booking({
       userId,
       centreId,
@@ -174,6 +174,7 @@ exports.createBooking = catchAsync(async (req, res) => {
       address,
       pickTime,
       details,
+      status: "in-process",
     });
     booking.save();
     user.bookings.push(booking._id);
@@ -189,14 +190,42 @@ exports.createBooking = catchAsync(async (req, res) => {
   }
 });
 
-
 exports.deleteAllUsers = catchAsync(async (_req, res) => {
   // Delete all feedbacks
   await User.deleteMany({});
 
   // Respond with success message
   res.status(200).json({
-    status: 'success',
-    message: 'All feedbacks have been successfully deleted.',
+    status: "success",
+    message: "All feedbacks have been successfully deleted.",
   });
 });
+
+exports.recordsOfUser = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  const user = await User.findOne({ _id: userId });
+  const records_arr = [];
+  for (let i = 0; i < user.bookings.length; i++) {
+    const { centreId, userId, doctorId, address, pickTime, details, status } =
+      await Booking.findOne({ _id: user.bookings[i] });
+    const { name: userName } = await User.findOne({ _id: userId });
+    const doctor = await Doctor.findOne({ _id: doctorId });
+    const { name: centreName } = await Centre.findOne({ _id: centreId });
+    records_arr.push({
+      centreId,
+      userId,
+      doctorId,
+      address,
+      pickTime,
+      details,
+      userName,
+      centreName,
+      status,
+    });
+  }
+  console.log(records_arr);
+  return res.status(200).json({
+    data: records_arr,
+  });
+});
+

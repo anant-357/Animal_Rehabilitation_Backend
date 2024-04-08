@@ -3,7 +3,6 @@ const Doctor = require("../../models/doctor");
 const Feedback = require("../../models/feedback");
 const User = require("../../models/user");
 const Record = require("../../models/bookingRecord");
-const Doctor = require("../../models/doctor");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
 
@@ -49,7 +48,6 @@ exports.getCities = catchAsync(async (_req, res) => {
   const centres = await Centre.find();
   for (let i = 0; i < centres.length; i++) {
     cities.add(centres[i].city);
-    console.log(centres[i].city);
   }
   return res.status(200).json({
     data: [...cities],
@@ -128,7 +126,6 @@ exports.deleteCentre = catchAsync(async (req, res) => {
 exports.feedbackOfCentre = catchAsync(async (req, res) => {
   const centreId = req.params.centreId;
   const centre = await Centre.findOne({ _id: centreId });
-  //console.log(centre);
   const feedback_arr = [];
   for (let i = 0; i < centre.feedback.length; i++) {
     const { info, report, accused, source } = await Feedback.findOne({
@@ -137,9 +134,7 @@ exports.feedbackOfCentre = catchAsync(async (req, res) => {
     const { name } = await User.findOne({ _id: source });
     console.log(name);
     feedback_arr.push({ info, report, accused, source, name });
-    // console.log(feedback[i]);
   }
-  //console.log(feedback);
   return res.status(200).json({
     data: feedback_arr,
   });
@@ -147,20 +142,24 @@ exports.feedbackOfCentre = catchAsync(async (req, res) => {
 
 exports.doctorsOfCentre = catchAsync(async (req, res) => {
   const centreId = req.params.centreId;
-  const centre = await Centre.findOne({ _id: centreId });
-  const doctors_arr = [];
-  for (let i = 0; i < centre.doctors.length; i++) {
-    const { name, age, email, qualification, image, bookings, centers } =
-      await Doctor.findOne({ _id: centre.doctors[i] });
-    doctors_arr.push({
-      name,
-      age,
-      email,
-      qualification,
-      image,
-      bookings,
-      centers,
-    });
+  let doctors_arr = [];
+  if (centreId == "0") {
+    doctors_arr = await Doctor.find();
+  } else {
+    const centre = await Centre.findOne({ _id: centreId });
+    for (let i = 0; i < centre.doctors.length; i++) {
+      const { name, age, email, qualification, image, bookings, centers } =
+        await Doctor.findOne({ _id: centre.doctors[i] });
+      doctors_arr.push({
+        name,
+        age,
+        email,
+        qualification,
+        image,
+        bookings,
+        centers,
+      });
+    }
   }
   return res.status(200).json({
     data: doctors_arr,
@@ -188,19 +187,14 @@ exports.recordsOfCentre = catchAsync(async (req, res) => {
       userName,
       doctorName,
     });
-    // console.log(feedback[i]);
   }
-  //console.log(feedback);
   return res.status(200).json({
     data: records_arr,
   });
 });
 
 exports.deleteAllCentres = catchAsync(async (_req, res) => {
-  // Delete all feedbacks
   await Centre.deleteMany({});
-
-  // Respond with success message
   res.status(200).json({
     status: "success",
     message: "All feedbacks have been successfully deleted.",
