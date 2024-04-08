@@ -52,7 +52,7 @@ exports.getAllDoctors = catchAsync(async (_req, res) => {
 });
 
 exports.updateDoctor = catchAsync(async (req, res) => {
-  const doctor_id = req.body._id;
+  const doctor_id = req.body.doctorId;
   console.log(doctor_id);
   const updatedDoctor = await Doctor.findOneAndReplace({ _id: doctor_id }, req.body);
   updatedDoctor.save();
@@ -60,6 +60,52 @@ exports.updateDoctor = catchAsync(async (req, res) => {
     message: "updated",
     data: updatedDoctor,
   });
+});
+
+exports.updateCentre = catchAsync(async (req, res) => {
+  const centre_id = req.params.centreId;
+  const updatedFields = req.body;
+  const data1 = await Centre.findOne({ _id: centre_id }, req.body);
+  if (updatedFields.password!=data1.password) {
+    bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
+      if (err) {
+        // Handle error
+        return res.status(500).json({ error: "Error hashing password" });
+      }
+
+      updatedFields.password = hash; 
+
+      const updatedCentre = await Centre.findOneAndUpdate(
+        { _id: centre_id },
+        updatedFields,
+        { new: true } 
+      );
+
+      if (!updatedCentre) {
+        return res.status(404).json({ error: "Centre not found" });
+      }
+
+      res.json({
+        message: "Centre updated",
+        data: updatedCentre,
+      });
+    });
+  } else {
+    const updatedCentre = await Centre.findOneAndUpdate(
+      { _id: centre_id },
+      updatedFields,
+      { new: true } 
+    );
+
+    if (!updatedCentre) {
+      return res.status(404).json({ error: "Centre not found" });
+    }
+
+    res.json({
+      message: "Centre updated",
+      data: updatedCentre,
+    });
+  }
 });
 
 exports.deleteDoctor = catchAsync(async (req, res) => {
