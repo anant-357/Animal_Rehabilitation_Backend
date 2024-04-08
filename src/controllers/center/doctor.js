@@ -12,6 +12,7 @@ exports.createDoctor = catchAsync(async (req, res, next) => {
 });
 
 exports.createDoctors = catchAsync(async (req, res) => {
+    const centre_id=req.params.centreId;
     const doctors = req.body;
     for (let i = 0; i < doctors.length; i++) {
       const doctor = doctors[i];
@@ -21,10 +22,10 @@ exports.createDoctors = catchAsync(async (req, res) => {
         email: doctor.email,
         qualification:doctor.qualification,
         image:doctor.image,
-        centers:doctor.centers,
+        centers:centre_id,
       });
       doctor_new.save();
-      const center = await Centre.findOne({_id: doctor.centers});
+      const center = await Centre.findOne({_id: centre_id});
       if(center) {
         //console.log(accused);
 
