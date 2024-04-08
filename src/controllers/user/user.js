@@ -5,10 +5,6 @@ const Doctor = require("../../models/doctor");
 const Booking = require("../../models/bookingRecord");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const emailVerification = require("../../utils/mailVerification");
-const verificationEmailTemplate = require("../../utils/mailVerificationTemplate");
-const router = express.Router();
 
 exports.createUser = catchAsync(async (req, res, next) => {
   const { name, email, p_number, city, password } = req.body;
@@ -30,29 +26,11 @@ exports.createUser = catchAsync(async (req, res, next) => {
       password: hash,
       bookings: [],
       complaints: [],
-      verified: false,
     });
 
     user.save();
-    let token = jwt.sign({ email }, process.env.JWTSECRET, { expiresIn: "1h" });
-    emailVerification(
-      user.email,
-      "Verification Email",
-      verificationEmailTemplate(token),
-    );
     res.send(user);
   });
-});
-
-router.post("/emailVerification", async function (req, res) {
-  const { authorization } = req.headers;
-  const decoded = jwt.verify(authorization, process.env.JWTSECRET);
-  let updateUser = await User.findOneAndUpdate(
-    { email: decoded.email },
-    { verified: true },
-    { new: true },
-  );
-  res.json(updateUser);
 });
 
 exports.getUser = catchAsync(async (req, res) => {
@@ -74,7 +52,6 @@ exports.createUsers = catchAsync(async (req, res) => {
         p_number: p_number,
         city: city,
         password: hash,
-        verified: false,
       });
       user.save();
     });
@@ -124,7 +101,9 @@ exports.getAllUsers = catchAsync(async (_req, res) => {
 exports.updateUser = catchAsync(async (req, res) => {
   const user_id = req.params.userId;
   const updatedFields = req.body;
+  console.log(updatedFields);
   const data1 = await User.findOne({ _id: user_id }, req.body);
+  console.log(data1)
   if (updatedFields.password!=data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {

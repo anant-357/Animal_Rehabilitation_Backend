@@ -29,6 +29,7 @@ exports.createCentres = catchAsync(async (req, res) => {
         name: centre.name,
         email: centre.email,
         p_number: centre.p_number,
+        price:centre.price,
         city: centre.city,
         image: centre.image,
         description: centre.description,
@@ -113,6 +114,7 @@ exports.updateCentre = catchAsync(async (req, res) => {
   const centre_id = req.params.centreId;
   const updatedFields = req.body;
   const data1 = await Centre.findOne({ _id: centre_id }, req.body);
+  console.log(data1)
   if (updatedFields.password!=data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {
