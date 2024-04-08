@@ -110,16 +110,23 @@ exports.updateCentre = catchAsync(async (req, res) => {
 });
 
 exports.deleteDoctor = catchAsync(async (req, res) => {
-    const doctorId = req.params.doctorId; 
-    const deletedDoctor = await Doctor.findByIdAndDelete({ _id: doctorId }, req.body);
-    if (!deletedDoctor) {
-        return res.status(404).json({
-        message: "Doctor not found",
-        });
-    }
-    res.json({
-        message: "Doctor deleted successfully",
-        data: deletedDoctor,
-    });
+  const doctorId = req.params.doctorId; 
+  const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
+  if (!deletedDoctor) {
+      return res.status(404).json({
+          message: "Doctor not found",
+      });
+  }
+  for (const centerId of deletedDoctor.centers) {
+      const center = await Centre.findById(centerId);      
+      if (center) {
+          center.doctors = center.doctors.filter(doc => doc._id.toString() !== doctorId);
+          await center.save();
+      }
+  }
+  res.json({
+      message: "Doctor deleted successfully",
+      data: deletedDoctor,
+  });
 });
   
