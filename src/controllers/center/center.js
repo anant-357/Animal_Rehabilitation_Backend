@@ -201,6 +201,7 @@ exports.doctorsOfCentre = catchAsync(async (req, res) => {
       const { name, age, email, qualification, image, bookings, centers } =
         await Doctor.findOne({ _id: centre.doctors[i] });
       doctors_arr.push({
+        _id: centre.doctors[i],
         name,
         age,
         email,

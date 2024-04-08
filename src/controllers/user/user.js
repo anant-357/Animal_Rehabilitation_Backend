@@ -199,8 +199,8 @@ exports.createBooking = catchAsync(async (req, res) => {
     user.save();
     centre.bookings.push(booking._id);
     centre.save();
-    doctor.bookings.push(booking._id);
-    doctor.save();
+    // doctor.bookings.push(booking._id);
+    // doctor.save();
     return res.status(200).json({
       message: "Booking Succesful",
       data: booking,

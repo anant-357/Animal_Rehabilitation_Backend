@@ -53,7 +53,7 @@ exports.getAllDoctors = catchAsync(async (_req, res) => {
 });
 
 exports.updateDoctor = catchAsync(async (req, res) => {
-  const doctor_id = req.body.doctorId;
+  const doctor_id = req.params.doctorId;
   console.log(doctor_id);
   const updatedDoctor = await Doctor.findOneAndReplace({ _id: doctor_id }, req.body);
   updatedDoctor.save();
@@ -111,19 +111,22 @@ exports.updateCentre = catchAsync(async (req, res) => {
 
 exports.deleteDoctor = catchAsync(async (req, res) => {
   const doctorId = req.params.doctorId; 
-  const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
+  const deletedDoctor = await Doctor.findById(doctorId);
   if (!deletedDoctor) {
       return res.status(404).json({
           message: "Doctor not found",
       });
   }
   for (const centerId of deletedDoctor.centers) {
+    console.log("here00");
+    console.log(centerId)
       const center = await Centre.findById(centerId);      
       if (center) {
           center.doctors = center.doctors.filter(doc => doc._id.toString() !== doctorId);
           await center.save();
       }
   }
+  await Doctor.findByIdAndDelete(doctorId);
   res.json({
       message: "Doctor deleted successfully",
       data: deletedDoctor,
