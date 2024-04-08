@@ -1,4 +1,5 @@
 const Centre = require("../../models/centre");
+const Doctor = require("../../models/doctor");
 const Feedback = require("../../models/feedback");
 const User = require("../../models/user");
 const catchAsync = require("../../utils/catchAsync");
@@ -6,7 +7,12 @@ const bcrypt = require("bcrypt");
 
 exports.createCentre = catchAsync(async (req, res, next) => {
   const centre = req.body;
-  const data = await Centre.create(centre);
+  const data = await Centre.create({
+    ...centre,
+    doctors: [],
+    bookings: [],
+    feedback: [],
+  });
   data.save();
   res.status(200).json({
     data,
@@ -134,6 +140,21 @@ exports.feedbackOfCentre = catchAsync(async (req, res) => {
   //console.log(feedback);
   return res.status(200).json({
     data: feedback_arr,
+  });
+});
+
+exports.doctorsOfCentre = catchAsync(async (req, res) => {
+  const centreId = req.params.centreId;
+  const centre = await Centre.findOne({ _id: centreId });
+  const doctor_arr = [];
+  for (let i = 0; i < centre.feedback.length; i++) {
+    const doctor = await Doctor.findOne({
+      _id: centre.doctors[i],
+    });
+    doctor_arr.push(doctor);
+  }
+  return res.status(200).json({
+    data: doctor_arr,
   });
 });
 
