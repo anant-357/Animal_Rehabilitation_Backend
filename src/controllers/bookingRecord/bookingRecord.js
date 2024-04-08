@@ -1,4 +1,7 @@
 const Record = require("../../models/bookingRecord");
+const Centre = require("../../models/centre");
+const User = require("../../models/user");
+const Doctor = require("../../models/doctor");
 const catchAsync = require("../../utils/catchAsync");
 
 exports.createRecord = catchAsync(async (req, res, next) => {
@@ -15,11 +18,37 @@ exports.createRecords = catchAsync(async (req, res) => {
     for (let i = 0; i < records.length; i++) {
       const record = records[i];
       let record_new = new Record({
+        userId:record.userId,
+        centreId:record.centreId,
+        doctorId:record.doctorId,
         address:record.address,
         pickTime:record.pickTime,
         details:record.details,
       });
       record_new.save();
+
+      const cent = await Centre.findOne({_id: record.centreId});
+      if(cent) {
+          //console.log(accused);
+
+          cent.bookings.push(record_new._id);
+          cent.save();
+      }
+      const user = await User.findOne({_id: record.userId});
+      if(user) {
+        // console.log(source);
+
+        user.bookings.push(record_new._id);
+        user.save();
+      }
+
+      const doctor = await Doctor.findOne({_id: record.doctorId});
+      if(doctor) {
+        // console.log(source);
+
+        doctor.bookings.push(record_new._id);
+        doctor.save();
+      }
     }
     res.send("Done!");
   });
@@ -63,3 +92,17 @@ exports.deleteRecord = catchAsync(async (req, res) => {
     data: deletedRecord,
   });
 });
+
+exports.deleteAllRecords = catchAsync(async (_req, res) => {
+  // Delete all feedbacks
+  await Record.deleteMany({});
+
+  // Respond with success message
+  res.status(200).json({
+    status: 'success',
+    message: 'All records have been successfully deleted.',
+  });
+});
+
+
+

@@ -8,6 +8,7 @@ const doctorSchema = new Schema({
   email: String,
   qualification: String,
   bookings: [{ type: Schema.ObjectId, ref: "Booking" }],
+  centers: [{ type: Schema.ObjectId, ref: "Centre" }],
 });
 
 const Doctor = mongoose.model("Doctor", doctorSchema);

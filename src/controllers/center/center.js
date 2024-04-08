@@ -2,6 +2,8 @@ const Centre = require("../../models/centre");
 const Doctor = require("../../models/doctor");
 const Feedback = require("../../models/feedback");
 const User = require("../../models/user");
+const Record = require("../../models/bookingRecord");
+const Doctor = require("../../models/doctor");
 const catchAsync = require("../../utils/catchAsync");
 const bcrypt = require("bcrypt");
 
@@ -146,15 +148,51 @@ exports.feedbackOfCentre = catchAsync(async (req, res) => {
 exports.doctorsOfCentre = catchAsync(async (req, res) => {
   const centreId = req.params.centreId;
   const centre = await Centre.findOne({ _id: centreId });
-  const doctor_arr = [];
-  for (let i = 0; i < centre.feedback.length; i++) {
-    const doctor = await Doctor.findOne({
-      _id: centre.doctors[i],
+  const doctors_arr = [];
+  for (let i = 0; i < centre.doctors.length; i++) {
+    const { name, age, email, qualification, image, bookings, centers } =
+      await Doctor.findOne({ _id: centre.doctors[i] });
+    doctors_arr.push({
+      name,
+      age,
+      email,
+      qualification,
+      image,
+      bookings,
+      centers,
     });
-    doctor_arr.push(doctor);
   }
   return res.status(200).json({
-    data: doctor_arr,
+    data: doctors_arr,
+  });
+});
+
+exports.recordsOfCentre = catchAsync(async (req, res) => {
+  const centreId = req.params.centreId;
+  const centre = await Centre.findOne({ _id: centreId });
+  // console.log(centre);
+  const records_arr = [];
+  for (let i = 0; i < centre.bookings.length; i++) {
+    const { centreId, userId, doctorId, address, pickTime, details } =
+      await Record.findOne({ _id: centre.bookings[i] });
+    const { name: userName } = await User.findOne({ _id: userId });
+    const { name: doctorName } = await Doctor.findOne({ _id: doctorId });
+    //console.log(name);
+    records_arr.push({
+      centreId,
+      userId,
+      doctorId,
+      address,
+      pickTime,
+      details,
+      userName,
+      doctorName,
+    });
+    // console.log(feedback[i]);
+  }
+  //console.log(feedback);
+  return res.status(200).json({
+    data: records_arr,
   });
 });
 
