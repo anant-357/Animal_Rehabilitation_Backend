@@ -222,10 +222,9 @@ exports.recordsOfCentre = catchAsync(async (req, res) => {
   // console.log(centre);
   const records_arr = [];
   for (let i = 0; i < centre.bookings.length; i++) {
-    const { centreId, userId, doctorId, address, pickTime, details } =
+    const { centreId, userId, doctorId, address, pickTime, details, status } =
       await Record.findOne({ _id: centre.bookings[i] });
     const { name: userName } = await User.findOne({ _id: userId });
-    const { name: doctorName } = await Doctor.findOne({ _id: doctorId });
     //console.log(name);
     records_arr.push({
       centreId,
@@ -235,7 +234,7 @@ exports.recordsOfCentre = catchAsync(async (req, res) => {
       pickTime,
       details,
       userName,
-      doctorName,
+      status,
     });
   }
   return res.status(200).json({
