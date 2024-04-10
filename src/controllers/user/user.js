@@ -104,6 +104,9 @@ exports.updateUser = catchAsync(async (req, res) => {
   console.log(updatedFields);
   const data1 = await User.findOne({ _id: user_id }, req.body);
   console.log(data1);
+  updatedFields.bookings=data1.bookings;
+  updatedFields.complaints=data1.complaints;
+
   if (updatedFields.password != data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {
@@ -112,22 +115,9 @@ exports.updateUser = catchAsync(async (req, res) => {
       }
 
       updatedFields.password = hash;
-
-      const updatedUser = await User.findOneAndReplace(
-        { _id: user_id },
-        req.body,
-      );
-
-      if (!updatedUser) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      res.json({
-        message: "User updated",
-        data: updatedUser,
-      });
+    
     });
-  } else {
+  }
     const updatedUser = await User.findOneAndReplace(
       { _id: user_id },
       req.body,
@@ -141,8 +131,7 @@ exports.updateUser = catchAsync(async (req, res) => {
       message: "User updated",
       data: updatedUser,
     });
-  }
-});
+ });
 
 exports.deleteUser = catchAsync(async (req, res) => {
   const userId = req.body._id;

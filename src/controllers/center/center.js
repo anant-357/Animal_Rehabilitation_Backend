@@ -113,36 +113,32 @@ exports.getAllCentres = catchAsync(async (_req, res) => {
 exports.updateCentre = catchAsync(async (req, res) => {
   const centre_id = req.params.centreId;
   const updatedFields = req.body;
-  const data1 = await Centre.findOne({ _id: centre_id }, req.body);
-  console.log(data1);
+  const data1 = await Centre.findById(centre_id);
+  console.log(updatedFields);
+  updatedFields.bookings = data1.bookings;
+  updatedFields.doctors = data1.doctors;
+  updatedFields.feedback = data1.feedback;
+  console.log(updatedFields);
+
+
+  //console.log(data1);
   if (updatedFields.password != data1.password) {
     bcrypt.hash(updatedFields.password, 10, async function (err, hash) {
       if (err) {
         // Handle error
         return res.status(500).json({ error: "Error hashing password" });
       }
-
       updatedFields.password = hash;
-
-      const updatedCentre = await Centre.findOneAndReplace(
-        { _id: centre_id },
-        req.body,
-      );
-
-      if (!updatedCentre) {
-        return res.status(404).json({ error: "Centre not found" });
-      }
-
-      res.json({
-        message: "Centre updated",
-        data: updatedCentre,
-      });
     });
-  } else {
+  } 
+  console.log(updatedFields);
+
     const updatedCentre = await Centre.findOneAndReplace(
       { _id: centre_id },
-      req.body,
+      updatedFields,
     );
+    updatedCentre.save();
+    console.log(updatedCentre);
 
     if (!updatedCentre) {
       return res.status(404).json({ error: "Centre not found" });
@@ -152,7 +148,7 @@ exports.updateCentre = catchAsync(async (req, res) => {
       message: "Centre updated",
       data: updatedCentre,
     });
-  }
+  
 });
 
 exports.deleteCentre = catchAsync(async (req, res) => {
@@ -222,11 +218,12 @@ exports.recordsOfCentre = catchAsync(async (req, res) => {
   // console.log(centre);
   const records_arr = [];
   for (let i = 0; i < centre.bookings.length; i++) {
-    const { centreId, userId, doctorId, address, pickTime, details, status } =
+    const { _id, centreId, userId, doctorId, address, pickTime, details, status } =
       await Record.findOne({ _id: centre.bookings[i] });
     const { name: userName } = await User.findOne({ _id: userId });
     //console.log(name);
     records_arr.push({
+      _id,
       centreId,
       userId,
       doctorId,

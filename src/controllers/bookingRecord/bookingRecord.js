@@ -108,17 +108,6 @@ exports.deleteAllRecords = catchAsync(async (_req, res) => {
 
 exports.paymentRecord = catchAsync(async(req,res)=>{
   const {payload} = req.body;
-
-  // const customer = await stripe.customers.create({
-  //     name: 'Jenny Rosen',
-  //     address: {
-  //       line1: '510 Townsend St',
-  //       postal_code: '98140',
-  //       city: 'San Francisco',
-  //       state: 'CA',
-  //       country: 'US',
-  //     },
-  // });
   
   const lineItems = [{
       price_data:{
@@ -134,7 +123,6 @@ exports.paymentRecord = catchAsync(async(req,res)=>{
   const session = await stripe.checkout.sessions.create({
       payment_method_types:["card"],
       line_items:lineItems,
-      // customer,
       mode:"payment",
       success_url:"http://localhost:5173/updateuser",
       cancel_url:"http://localhost:5173/aman",
@@ -144,4 +132,29 @@ exports.paymentRecord = catchAsync(async(req,res)=>{
 
 });
 
-
+exports.deleteRecord = catchAsync(async (req, res) => {
+  const bookingId = req.params.recordId; 
+  const deletedbooking = await Record.findById(bookingId);
+  if (!deletedbooking) {
+    return res.status(404).json({
+      message: "booking not found",
+    });
+  }
+  const centreId = deletedbooking.centreId;
+  const userId = deletedbooking.userId;
+  const centre = await Centre.findById(centreId);
+  if(centre){
+    centre.bookings = centre.bookings.filter(book => book._id.toString() !== bookingId);
+    await centre.save();
+  }
+  const user = await User.findById(userId);
+  if(user){
+    user.bookings = user.bookings.filter(book => book._id.toString() !== bookingId);
+    await user.save();
+  }
+  await Record.findByIdAndDelete(bookingId);
+  res.json({
+    message: "booking deleted successfully",
+    data: deletedbooking,
+  });
+});
